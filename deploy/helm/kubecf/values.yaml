@@ -47,7 +47,10 @@ releases:
   bits-service:
     version: 2.28.0
   brain-tests:
-    version: v0.0.8
+    version: v0.0.9
+    stemcell:
+      os: SLE_15_SP1
+      version: 23.11-7.0.0_374.gb8e8e6af
   cf-acceptance-tests:
     version: 0.0.11
     stemcell:
@@ -218,15 +221,9 @@ services:
 settings:
   router:
     # tls sets up the public TLS for the router. The tls keys:
-    #   ca: the CA in the PEM format. Not required if the certificate is signed by a well-known authority.
-    #      If you provide a CA cert, it must be self-signed. An intermediate won't work.
     #   crt: the certificate in the PEM format. Required.
     #   key: the private key in the PEM format. Required.
     tls: {}
-    # ca: |
-    #   -----BEGIN CERTIFICATE-----
-    #   ...
-    #   -----END CERTIFICATE-----
     # crt: |
     #   -----BEGIN CERTIFICATE-----
     #   ...
@@ -304,6 +301,12 @@ features:
 
 # Enable or disable instance groups for the different test suites.
 # Only smoke tests should be run in production environments.
+#
+# __ATTENTION__: The brain tests do things with the cluster which
+# required them to have `cluster-admin` permissions (i.e. root).
+# Enabling them is thus potentially insecure. They should only be
+# activated for isolated testing.
+
 testing:
   brain_tests:
     enabled: false
