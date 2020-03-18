@@ -47,11 +47,12 @@
   value: false
 
 # # Use a PVC for garden data
+# https://github.com/cloudfoundry-incubator/kubecf/issues/441
 - type: replace
   path: /instance_groups/name=diego-cell/env?/bosh/agent/settings/ephemeralAsPVC
   value: true
 - type: replace
-  path: /instance_groups/name=diego-cell/vm_resources/ephemeral_disk_size?
+  path: /instance_groups/name=diego-cell/vm_resources?/ephemeral_disk_size?
   value: {{ .Values.sizing.diego_cell.ephemeral_disk.size }}
 - type: remove
   path: /instance_groups/name=diego-cell/persistent_disk_type?
@@ -81,6 +82,7 @@
       condition:
         exec:
           command: [sh, -c, 'ss -nlt sport = 17019 | grep "LISTEN.*:17019"']
+
 
 {{- if .Values.testing.brain_tests.enabled}}
 # For brain tests, allow garden access to the insecure registry they will create.
