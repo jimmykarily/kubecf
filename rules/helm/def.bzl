@@ -260,3 +260,33 @@ delete = rule(
     }, **_common_attrs),
     executable = True,
 )
+
+def _dep_up_impl(ctx):
+    executable = ctx.actions.declare_file("{}.rb".format(ctx.attr.name))
+    ctx.actions.expand_template(
+        output = executable,
+        template = ctx.file._script_tmpl,
+        substitutions = {
+            "[[helm]]": ctx.executable._helm.short_path,
+            "[[install_name]]": ctx.attr.install_name,
+            "[[namespace]]": ctx.attr.namespace,
+        }
+    )
+    runfiles = [
+        ctx.executable._helm,
+    ]
+    return [DefaultInfo(
+        executable = executable,
+        runfiles = ctx.runfiles(files = runfiles),
+    )]
+
+dep_up = rule(
+    implementation = _dep_up_impl,
+    attrs = dict({
+        "_script_tmpl": attr.label(
+            allow_single_file = True,
+            default = "//rules/helm:dep_up.tmpl.rb",
+        ),
+    }, **_common_attrs),
+    executable = True,
+)

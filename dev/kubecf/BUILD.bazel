@@ -2,6 +2,7 @@ load(
     "//rules/helm:def.bzl",
     helm_upgrade = "upgrade",
     helm_delete = "delete",
+    helm_dep_up = "dep_up"
 )
 load("//:def.bzl", "project")
 
@@ -19,6 +20,12 @@ helm_upgrade(
 
 helm_delete(
     name = "delete",
+    install_name = project.deployment_name,
+    namespace = project.namespace,
+)
+
+helm_dep_up(
+    name = "dep_up",
     install_name = project.deployment_name,
     namespace = project.namespace,
 )
