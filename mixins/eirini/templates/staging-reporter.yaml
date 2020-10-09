@@ -24,11 +24,7 @@ spec:
         runAsNonRoot: true
       containers:
       - name: staging-reporter
-        {{- if .Values.eirini.opi.staging_reporter_image }}
-        image: {{ .Values.eirini.opi.staging_reporter_image }}:{{ .Values.eirini.opi.staging_reporter_image_tag }}
-        {{- else }}
         image: eirini/staging-reporter@{{ .Files.Get "assets/versions/staging-reporter" }}
-        {{- end }}
         imagePullPolicy: Always
         resources:
           requests:

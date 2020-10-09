@@ -9,6 +9,7 @@ metadata:
 data:
   opi.yml: |
     opi:
+      enable_multi_namespace_support: {{ .Values.eirini.opi.enable_multi_namespace_support }}
       app_namespace: {{ .Values.eirini.opi.namespace }}
       registry_address: "127.0.0.1:{{ .Values.bits.services.nodePort }}"
       registry_secret_name: {{ .Values.eirini.opi.registry_secret_name }}
@@ -63,7 +64,10 @@ data:
       application_service_account: eirini
       allow_run_image_as_root: false
   routing.yml: |
+    enable_multi_namespace_support: {{ .Values.eirini.opi.enable_multi_namespace_support }}
+    {{- if not .Values.eirini.opi.enable_multi_namespace_support }}
     app_namespace: {{ .Values.eirini.opi.namespace }}
+    {{- end }}
     {{- $serviceName := .Values.eirini.opi.routing.nats.serviceName }}
     {{- if contains "." $serviceName | not }}
     {{- $serviceName = printf "%s.%s.svc" $serviceName .Release.Namespace }}
@@ -71,7 +75,10 @@ data:
     nats_ip: {{ $serviceName }}
     nats_port: 4222
   metrics.yml: |
+    enable_multi_namespace_support: {{ .Values.eirini.opi.enable_multi_namespace_support }}
+    {{- if not .Values.eirini.opi.enable_multi_namespace_support }}
     app_namespace: {{ .Values.eirini.opi.namespace }}
+    {{- end }}
     {{- $serviceName := .Values.eirini.opi.logs.serviceName }}
     {{- if contains "." $serviceName | not }}
     {{- $serviceName = printf "%s.%s.svc" $serviceName .Release.Namespace }}
@@ -81,7 +88,10 @@ data:
     loggregator_key_path: "/etc/eirini/secrets/doppler.key"
     loggregator_ca_path: "/etc/eirini/secrets/doppler.ca"
   events.yml: |
+    enable_multi_namespace_support: {{ .Values.eirini.opi.enable_multi_namespace_support }}
+    {{- if not .Values.eirini.opi.enable_multi_namespace_support }}
     app_namespace: {{ .Values.eirini.opi.namespace }}
+    {{- end }}
     {{- $serviceName := .Values.eirini.opi.cc_api.serviceName }}
     {{- if contains "." $serviceName | not }}
     {{- $serviceName = printf "%s.%s.svc" $serviceName .Release.Namespace }}
@@ -91,11 +101,18 @@ data:
     cc_key_path: "/etc/eirini/secrets/cc.key"
     cc_ca_path: "/etc/eirini/secrets/cc.ca"
   staging-reporter.yml: |
+    enable_multi_namespace_support: {{ .Values.eirini.opi.enable_multi_namespace_support }}
+    {{- if not .Values.eirini.opi.enable_multi_namespace_support }}
     app_namespace: {{ .Values.eirini.opi.namespace }}
+    {{- end }}
     eirini_cert_path: "/etc/eirini/secrets/eirini-client.crt"
     eirini_key_path: "/etc/eirini/secrets/eirini-client.key"
     ca_path: "/etc/eirini/secrets/eirini-client.ca"
   instance-index-env-injector.yml: |
+    enable_multi_namespace_support: {{ .Values.eirini.opi.enable_multi_namespace_support }}
+    {{- if not .Values.eirini.opi.enable_multi_namespace_support }}
+    app_namespace: {{ .Values.eirini.opi.namespace }}
+    {{- end }}
     service_name: eirinix-instance-index-env-injector
     service_port: 8443
     workload_namespace: {{ .Values.eirini.opi.namespace }}

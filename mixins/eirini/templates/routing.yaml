@@ -31,11 +31,7 @@ spec:
         runAsNonRoot: true
       containers:
       - name: route-collector
-        {{- if .Values.eirini.opi.route_collector_image }}
-        image: {{ .Values.eirini.opi.route_collector_image }}:{{ .Values.eirini.opi.image_tag }}
-        {{- else }}
         image: eirini/route-collector@{{ .Files.Get "assets/versions/route-collector" }}
-        {{- end }}
         imagePullPolicy: Always
         env:
         - name: "NATS_PASSWORD"
@@ -51,11 +47,7 @@ spec:
             cpu: 30m
             memory: 45Mi
       - name: route-pod-informer
-        {{- if .Values.eirini.opi.route_pod_informer_image }}
-        image: {{ .Values.eirini.opi.route_pod_informer_image }}:{{ .Values.eirini.opi.image_tag }}
-        {{- else }}
         image: eirini/route-pod-informer@{{ .Files.Get "assets/versions/route-pod-informer" }}
-        {{- end }}
         imagePullPolicy: Always
         env:
         - name: "NATS_PASSWORD"
@@ -71,11 +63,7 @@ spec:
             cpu: 30m
             memory: 45Mi
       - name: route-statefulset-informer
-        {{- if .Values.eirini.opi.route_statefulset_informer_image }}
-        image: {{ .Values.eirini.opi.route_statefulset_informer_image }}:{{ .Values.eirini.opi.image_tag }}
-        {{- else }}
         image: eirini/route-statefulset-informer@{{ .Files.Get "assets/versions/route-statefulset-informer" }}
-        {{- end }}
         imagePullPolicy: Always
         env:
         - name: "NATS_PASSWORD"

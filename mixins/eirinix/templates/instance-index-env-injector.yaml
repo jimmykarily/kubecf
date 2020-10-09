@@ -32,7 +32,7 @@ spec:
       containers:
         - name: {{ $component }}
           {{- with index .Values.eirinix $component "image" }}
-          image: {{ printf "%s/%s:%s" .repository $component .tag | quote }}
+          image: {{ printf "%s/%s@%s" .repository $component .tag | quote }}
           args: ["-c", "/etc/eirini/config/instance-index-env-injector.yml"]
           imagePullPolicy: {{ .pullPolicy }}
           {{- end }}

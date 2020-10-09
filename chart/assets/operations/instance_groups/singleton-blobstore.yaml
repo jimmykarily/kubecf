@@ -1,7 +1,7 @@
 {{ if eq .Values.features.blobstore.provider "singleton" }}
 - type: replace
   path: /instance_groups/name=singleton-blobstore/persistent_disk?
-  value: 102400 # 100GB
+  value: 500 # 100GB
 {{- if .Values.kube.storage_class }}
 - type: replace
   path: /instance_groups/name=singleton-blobstore/persistent_disk_type

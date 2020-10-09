@@ -33,29 +33,25 @@ spec:
                 name: "{{ .Values.eirini.opi.events.tls.capiClient.secretName }}"
                 items:
                 - key: "{{ .Values.eirini.opi.events.tls.capiClient.certPath }}"
-                  path: cc.crt
+                  path: tls.crt
                 - key: "{{ .Values.eirini.opi.events.tls.capiClient.keyPath }}"
-                  path: cc.key
+                  path: tls.key
             - secret:
                 name: "{{ .Values.eirini.opi.events.tls.capi.secretName }}"
                 items:
                 - key: "{{ .Values.eirini.opi.events.tls.capi.caPath }}"
-                  path: cc.ca
+                  path: ca.crt
       securityContext:
         runAsNonRoot: true
       containers:
       - name: event-reporter
-        {{- if .Values.eirini.opi.event_reporter_image }}
-        image: {{ .Values.eirini.opi.event_reporter_image }}:{{ .Values.eirini.opi.event_reporter_image_tag }}
-        {{- else }}
         image: eirini/event-reporter@{{ .Files.Get "assets/versions/event-reporter" }}
-        {{- end }}
         imagePullPolicy: Always
         volumeMounts:
         - name: config-map-volume
-          mountPath: /etc/eirini/config
+          mountPath: /etc/eirini-event-reporter/config
         - name: cf-secrets
-          mountPath: /etc/eirini/secrets
+          mountPath: /etc/cf-api/certs
         resources:
           requests:
             cpu: 15m

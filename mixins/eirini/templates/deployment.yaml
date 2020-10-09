@@ -26,48 +26,49 @@ spec:
             items:
             - key: opi.yml
               path: opi.yml
-        - name: cf-secrets
+        - name: cc-certs
           projected:
-            sources:
-            - secret:
-                name: "{{ .Values.eirini.opi.tls.opiCapiClient.secretName }}"
-                items:
-                - key: "{{ .Values.eirini.opi.tls.opiCapiClient.certPath }}"
-                  path: cc.crt
-                - key: "{{ .Values.eirini.opi.tls.opiCapiClient.keyPath }}"
-                  path: cc.key
-            - secret:
-                name: "{{ .Values.eirini.opi.tls.capi.secretName }}"
-                items:
-                - key: "{{ .Values.eirini.opi.tls.capi.caPath }}"
-                  path: cc.ca
-            - secret:
-                name: "{{ .Values.eirini.opi.tls.opiServer.secretName }}"
-                items:
-                - key: "{{ .Values.eirini.opi.tls.opiServer.certPath }}"
-                  path: eirini-server.crt
-                - key: "{{ .Values.eirini.opi.tls.opiServer.keyPath }}"
-                  path: eirini-server.key
-            - secret:
-                name: "{{ .Values.eirini.opi.tls.eirini.secretName }}"
-                items:
-                - key: "{{ .Values.eirini.opi.tls.eirini.caPath }}"
-                  path: eirini.ca
+              sources:
+              - secret:
+                  name: "{{ .Values.eirini.opi.tls.opiCapiClient.secretName }}"
+                  items:
+                  - key: "{{ .Values.eirini.opi.tls.opiCapiClient.certPath }}"
+                    path: tls.crt
+                  - key: "{{ .Values.eirini.opi.tls.opiCapiClient.keyPath }}"
+                    path: tls.key
+              - secret:
+                  name: "{{ .Values.eirini.opi.tls.capi.secretName }}"
+                  items:
+                  - key: "{{ .Values.eirini.opi.tls.capi.caPath }}"
+                    path: ca.crt
+        - name: eirini-certs
+          projected:
+              sources:
+              - secret:
+                  name: "{{ .Values.eirini.opi.tls.opiServer.secretName }}"
+                  items:
+                  - key: "{{ .Values.eirini.opi.tls.opiServer.certPath }}"
+                    path: tls.crt
+                  - key: "{{ .Values.eirini.opi.tls.opiServer.keyPath }}"
+                    path: tls.key
+              - secret:
+                  name: "{{ .Values.eirini.opi.tls.eirini.secretName }}"
+                  items:
+                  - key: "{{ .Values.eirini.opi.tls.eirini.caPath }}"
+                    path: ca.crt
       securityContext:
         runAsNonRoot: true
       containers:
       - name: opi
-        {{- if .Values.eirini.opi.image }}
-        image: {{ .Values.eirini.opi.image }}:{{ .Values.eirini.opi.image_tag }}
-        {{- else }}
         image: eirini/opi@{{ .Files.Get "assets/versions/opi" }}
-        {{- end }}
         imagePullPolicy: Always
         volumeMounts:
         - name: config-map-volume
-          mountPath: /workspace/jobs/opi/config
-        - name: cf-secrets
-          mountPath: /workspace/jobs/opi/secrets
+          mountPath: /etc/eirini/config
+        - name: cc-certs
+          mountPath: /etc/cf-api/certs
+        - name: eirini-certs
+          mountPath: /etc/eirini/certs
         ports:
         - containerPort: 8085
           name: https
