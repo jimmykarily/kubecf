@@ -1,0 +1,32 @@
+system_domain: 172.18.0.5.omg.howdoi.website
+services:
+  router:
+    type: LoadBalancer
+    externalIPs: ["172.18.0.5"]
+  tcp-router:
+    type: LoadBalancer
+    externalIPs: ["172.18.0.5"]
+  ssh-proxy:
+    type: LoadBalancer
+    externalIPs: ["172.18.0.5"]
+
+# sizing:
+#   diego_cell:
+#     instances: 4
+
+features:
+  eirini:
+    enabled: true
+
+install_stacks:
+  - sle15
+#high_availability: true
+
+eirinix:
+    instance-index-env-injector:
+        image:
+            repository: eirini
+            tag: "sha256:e57a0c1461ba8f28ec1ea7bef892cde0011593dd142f0f0049f26c8473aaa9a5"
+eirini:
+    opi:
+        enable_multi_namespace_support: false
