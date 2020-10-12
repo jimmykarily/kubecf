@@ -115,6 +115,5 @@ data:
     {{- end }}
     service_name: eirinix-instance-index-env-injector
     service_port: 8443
-    workload_namespace: {{ .Values.eirini.opi.namespace }}
     service_namespace: {{ .Release.Namespace }}
 {{- end }}
